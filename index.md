@@ -1,37 +1,232 @@
-## Welcome to GitHub Pages
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-You can use the [editor on GitHub](https://github.com/fuganholi/fuganholi.github.io/edit/main/index.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" href="seve.jpeg">
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Roboto:700);
 
-```markdown
-Syntax highlighted code block
+fieldset{
+  border: none;
+}
 
-# Header 1
-## Header 2
-### Header 3
+label, output{
+  display:inline-block;margin-bottom:0;font-weight:400;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;background-image:none;border:1px solid transparent;padding:6px 12px;font-size:14px;line-height:1.42857143;border-radius:4px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color: #fff;
+}
+label[for=r], output[for=r]{
+  background-color: #f00;
+}
+label[for=g], output[for=g]{
+  background-color: #0f0;
+}
+label[for=b], output[for=b]{
+  background-color: #00f;
+}
 
-- Bulleted
-- List
+label[for=spd], output[for=spd]{
+  background-color: #269abc;
+}
 
-1. Numbered
-2. List
+    </style>
 
-**Bold** and _Italic_ and `Code` text
+    <title>seven's room</title>
 
-[Link](url) and ![Image](src)
-```
+    <script>
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+    </script>
 
-### Jekyll Themes
+  </head>
+  <body>
+    <header>
+      <table>
+        <td width="1400px">
+          <h1>welcome!</h1>
+        </td>
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/fuganholi/fuganholi.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+        <td>
+        <div align="right">
 
-### Support or Contact
+          <span id="datetime">
+            <script>
+              var dt = new Date();
+              document.getElementById("datetime").innerHTML = (("0"+dt.getDate()).slice(-2)) +"/"+ (("0"+(dt.getMonth()+1)).slice(-2)) +"/"+ (dt.getFullYear()) +" "+ (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));          
+            </script>
+          </span>
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+        </div>
+      </td>
+    </table>
+
+  </header>
+<!--     <div id="status">
+      <b>status:</b><output for="mode" id="mode_out">off</output>
+    </div> -->
+
+    <div class="col" align="center">
+       <button type="button" class="btn btn-danger" onclick="liga()">on</button>
+       <button type="button" class="btn btn-dark" onclick="desliga()">off</button>
+    </div>
+
+    <br><br>
+
+    <div align="center">
+    <!-- <table> -->
+      <div>
+      <h1>mode</h1>
+      </div>
+      <div id="box">
+	      <fieldset>
+
+	        <label for="r">R</label>
+	        <input type="range" min="0" max="255" id="r" step="1" value="0">
+	        <output for="r" id="r_out">0</output>
+	      </fieldset>  
+
+	      <fieldset>
+	        <label for="g">G</label>
+	        <input type="range" min="0" max="255" id="g" step="1" value="0">
+	        <output for="g" id="g_out">0</output>
+	      </fieldset>
+
+	      <fieldset>
+	        <label for="b">B</label>
+	        <input type="range" min="0" max="255" id="b" step="1" value="0">
+	        <output for="b" id="b_out">0</output>
+	      </fieldset>
+      </div>
+      <div>
+
+          <button type="button" class="btn btn-info" onclick="color()">SET</button>
+
+      </div>
+
+      <div id="pulse">
+          <button type="button" class="btn btn-info" onclick="pwm()">PULSE</button>
+          <input type="range" min="0" max="100" id="spd" step="1" value="0"><output for="spd" id="spd_out">0</output>
+      </div>
+   	  <div>
+        <button type="button" class="btn btn-info" onclick="rainbow()">RAINBOW</button>
+      </div>
+
+
+    </table>
+      
+    </div>
+
+    <br><br>  
+    
+    <script>
+
+
+      var box = document.getElementById("box"), 
+      r = document.querySelector('#r'),
+      g = document.querySelector('#g'),
+      b = document.querySelector('#b'),
+      r_out = document.querySelector('#r_out'),
+      g_out = document.querySelector('#g_out'),
+      b_out = document.querySelector('#b_out');
+      
+
+      var pulse = document.getElementById("pulse"),
+      spd = document.querySelector('#spd'),
+      spd_out = document.querySelector('#spd_out');
+
+      function setColor(){
+        var r_hex = parseInt(r.value, 10).toString(16),
+            g_hex = parseInt(g.value, 10).toString(16),
+            b_hex = parseInt(b.value, 10).toString(16),
+            hex = "#" + pad(r_hex) + pad(g_hex) + pad(b_hex);
+        document.getElementById("box").style.backgroundColor = hex; 
+        
+        
+      }
+
+      function setSpeed(){
+        spd_out.value = spd;
+
+      }
+
+      function pad(n){
+        return (n.length<2) ? "0"+n : n;
+      }
+
+      r.addEventListener('change', function() {
+        setColor();
+        r_out.value = r.value;
+      }, false);
+
+      r.addEventListener('input', function() {
+        setColor();
+        r_out.value = r.value;
+      }, false);
+
+      g.addEventListener('change', function() {
+        setColor();
+        g_out.value = g.value;
+      }, false);
+
+      g.addEventListener('input', function() {
+        setColor();
+        g_out.value = g.value;
+      }, false);
+
+      b.addEventListener('change', function() {
+        setColor();
+        b_out.value = b.value;
+      }, false);
+
+      b.addEventListener('input', function() {
+        setColor();
+        b_out.value = b.value;
+      }, false);
+
+      spd.addEventListener('change', function() {
+        setSpeed();
+        spd_out.value = spd.value;
+      }, false);
+
+      spd.addEventListener('input', function() {
+        setSpeed();
+        spd_out.value = spd.value;  
+      }, false);
+
+
+      function liga() {
+        window.location.href = "?on"
+        
+      }
+
+      function desliga() {
+        window.location.href = "?off"
+      }
+
+      function rainbow() {
+        window.location.href = "?rnbw"
+      }
+
+      function wheel() {
+        window.location.href = "?wheel"
+      }
+
+      function pwm() {
+        window.location.href = "?pulse" + "?" + parseInt(spd.value).toString()
+        
+      }
+
+      function color() {
+        window.location.href = "?color" + "?" + r_out.value + "?" + g_out.value + "?" + b_out.value
+      }
+
+
+    </script>
+
+  </body>
+</html>
